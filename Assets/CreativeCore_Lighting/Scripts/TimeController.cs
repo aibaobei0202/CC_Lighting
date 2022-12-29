@@ -71,9 +71,10 @@ public class TimeController : MonoBehaviour
         float sunLightRotation;
 
         //TimeOfDay获取此实例的当天的时间。
-        //如果当前时间大于日出时间,小于日落时间,则判定现在是白天
+        //如果当前时间大于日出时间,小于日落时间,则判定现在是白天 
         if (currentTime.TimeOfDay > sunriseTime && currentTime.TimeOfDay < sunsetTime)
         {
+            //
             TimeSpan sunriseToSunsetDuration = CalculateTimeDifference(sunriseTime, sunsetTime);
             //从日升到当前时间的时间差
             TimeSpan timeSinceSunrise = CalculateTimeDifference(sunriseTime, currentTime.TimeOfDay);
@@ -97,6 +98,7 @@ public class TimeController : MonoBehaviour
 
     private TimeSpan CalculateTimeDifference(TimeSpan fromTime,TimeSpan toTime)
     {
+        //设置时间间隔 
         TimeSpan diff = toTime - fromTime;
         if (diff.TotalSeconds < 0)
         {
