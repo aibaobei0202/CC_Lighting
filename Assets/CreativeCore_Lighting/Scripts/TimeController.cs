@@ -74,13 +74,14 @@ public class TimeController : MonoBehaviour
         //如果当前时间大于日出时间,小于日落时间,则判定现在是白天 
         if (currentTime.TimeOfDay > sunriseTime && currentTime.TimeOfDay < sunsetTime)
         {
-            //
+            //计算日出时间到日落时间的时间差
             TimeSpan sunriseToSunsetDuration = CalculateTimeDifference(sunriseTime, sunsetTime);
-            //从日升到当前时间的时间差
+            //从日出到当前时间的时间差
             TimeSpan timeSinceSunrise = CalculateTimeDifference(sunriseTime, currentTime.TimeOfDay);
-
+            //计算当前时间/白天总时间
             double percentage = timeSinceSunrise.TotalMinutes / sunriseToSunsetDuration.TotalMinutes;
 
+            //基于浮点数percentage返回0-180之间的插值，percentage限制在0-1之间，当percentage=0时、返回0，percentage=1时、返回180.
             sunLightRotation = Mathf.Lerp(0, 180, (float)percentage);
         } else
         {
@@ -93,13 +94,18 @@ public class TimeController : MonoBehaviour
             sunLightRotation = Mathf.Lerp(180, 360, (float)percentage);
         }
         Debug.Log($"旋转：{sunLightRotation}");
+        //将sunlight定向光方向进行设定
+        //Quaternion:四元数，计算方位，旋转的
+        //AngleAxis：表示旋转一定的角度，围绕某个轴
         sunlight.transform.rotation = Quaternion.AngleAxis(sunLightRotation, Vector3.right);
     }
 
+    //计算时间差
     private TimeSpan CalculateTimeDifference(TimeSpan fromTime,TimeSpan toTime)
     {
-        //设置时间间隔 
+        //设置时间间隔 末时间-初始时间
         TimeSpan diff = toTime - fromTime;
+        //若结果小于0，则加上24小时，补足一天
         if (diff.TotalSeconds < 0)
         {
             diff += TimeSpan.FromHours(24);
